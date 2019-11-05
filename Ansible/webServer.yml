@@ -1,0 +1,9 @@
+---
+- name: fao first run
+  hosts: geoserver
+  become: yes
+  gather_facts: no
+  roles:
+    - baseline
+#    - loadbalancer
+    - webserver
