@@ -1,0 +1,16 @@
+---
+- name: Ensure HAProxy is installed.
+  become: yes
+  apt:
+    name: haproxy
+    state: present
+
+- name: ensure HAProxy is enabled
+  service:
+    name: haproxy
+    enabled: yes
+
+- name: Ensure HAProxy is running
+  service:
+    name: haproxy
+    state: restarted
