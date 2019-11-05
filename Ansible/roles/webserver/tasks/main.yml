@@ -9,6 +9,11 @@
   - "{{openjdk_package_name}}"
   - unzip
 
+- name: Install utilities for SMB share
+  apt:
+    name: cifs-utils
+    state: present
+
 # tomcat installation
 - name: "add group {{tomcat_group}}"
   group:
