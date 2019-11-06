@@ -1,8 +1,3 @@
-tomcat_version: 8.5.47
-tomcat_file: apache-tomcat-{{tomcat_version}}.tar.gz
-tomcat_url: https://archive.apache.org/dist/tomcat/tomcat-8/v{{tomcat_version}}/bin/apache-tomcat-{{tomcat_version}}.tar.gz
-tomcat_install_path: /opt
-
 openjdk_version: 8
 openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
 
@@ -11,8 +6,7 @@ geoserver_url: https://build.geoserver.org/geoserver/2.16.x/geoserver-2.16.x-lat
 tomcat_user: tomcat
 tomcat_group: tomcat
 
-tomcat_install_dir: /opt/tomcat
-tomcat_dir: "{{tomcat_install_dir}}/apache-tomcat-{{tomcat_version}}"
+tomcat_install_dir: /var/lib/tomcat8
 
 tomcat_java_home: /usr/lib/jvm/jre
 tomcat_service_name: tomcat

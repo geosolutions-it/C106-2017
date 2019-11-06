@@ -26,27 +26,11 @@
     group: "{{tomcat_group}}"
     state: present
 
-- name: Download tomcat
+- name: install tomcat
   become: yes
-  get_url: 
-    url: "{{tomcat_url}}"
-    dest: /tmp
-
-- name: Create tomcat installation directory
-  file:
-    path: "{{tomcat_install_dir}}"
-    owner: "{{tomcat_user}}"
-    mode: 0755
-    state: directory
-
-- name: unarchive in install dir
-  become: yes
-  unarchive:
-    src: "/tmp/{{tomcat_file}}"
-    dest: "{{tomcat_install_dir}}"
-    owner: "{{tomcat_user}}"
-    group: "{{tomcat_group}}"
-    remote_src: yes
+  apt:
+    name: tomcat8
+    state: present
 
 - name: download geoserver war
   become: yes
@@ -59,60 +43,14 @@
   become: yes
   unarchive: 
     src: "/tmp/geoserver-2.16.x-latest-war.zip"
-    dest: "/tmp"
+    dest: "{{tomcat_install_dir}}/webapps"
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
     remote_src: yes
-
-- name: make tomcat executable
-  become: yes
-  file:
-    dest: "{{tomcat_dir}}/bin/{{item}}"
-    mode: ug+x
-  with_items:
-    - catalina.sh
-    - shutdown.sh
-    - startup.sh
-    #- tool-wrapper.sh
-    #- version.sh
-    #- configtest.sh
-    #- daemon.sh
-    #- digest.sh
-    #- setclasspath.sh
-
-- name: deploy geoserver.war into tomcat
-  copy:
-    remote_src: yes
-    src: "/tmp/geoserver.war"
-    dest: "{{tomcat_dir}}/webapps/"
-
-- name: Ensure correct ownership is set
-  file:
-    path: "{{tomcat_dir}}/{{item}}"
-    recurse: yes
-    owner: "{{tomcat_user}}"
-    group: "{{tomcat_group}}"
-  with_items:
-    - webapps/
-    - work/
-    - temp/
-    - logs/
-
-- name: Set Systemd file for tomcat
-  become: yes
-  template:
-    src: "tomcat.service.j2"
-    dest: "/etc/systemd/system/tomcat.service"
-
-- name: give tomcat group ownership over the install directory
-  file:
-    path: "{{tomcat_dir}}"
-    recurse: yes
-    group: "{{tomcat_group}}"
 
 - name: Ensure tomcat service is started
   systemd:
-    name: tomcat
+    name: tomcat8
     state: started
     enabled: True
     daemon_reload: yes
