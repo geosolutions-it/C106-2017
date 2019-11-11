@@ -15,6 +15,25 @@
     name: cifs-utils
     state: present
 
+# git clone and pull
+# ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
+# ssh keys on gitlab profile are added manually
+# verify `known hosts` if it hangs up
+
+- name: Ensure .ssh directory exists.
+  file: 
+    dest: "/home/ubuntu/.ssh"
+    mode: 0700 
+    owner: ubuntu 
+    state: directory
+
+- name: Download ssh key
+  copy: 
+    src: "{{source_key}}" 
+    dest: "{{dest_key}}"
+    mode: 0600
+    owner: ubuntu
+
 # tomcat installation
 - name: "add group {{tomcat_group}}"
   group:
