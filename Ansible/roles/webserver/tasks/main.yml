@@ -8,6 +8,7 @@
   with_items:
   - "{{openjdk_package_name}}"
   - unzip
+  - git
 
 - name: Install utilities for SMB share
   apt:
