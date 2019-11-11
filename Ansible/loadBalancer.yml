@@ -1,5 +1,5 @@
 ---
-- name: fao first run
+- name: first draft for loadbalancer
   hosts: haproxy
   become: yes
   gather_facts: no
