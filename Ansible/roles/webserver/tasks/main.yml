@@ -1,0 +1,56 @@
+---
+# prerequisites installation
+- name: Ensure prerequisites are installed
+  become: yes
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - "{{openjdk_package_name}}"
+  - unzip
+
+- name: Install utilities for SMB share
+  apt:
+    name: cifs-utils
+    state: present
+
+# tomcat installation
+- name: "add group {{tomcat_group}}"
+  group:
+    name: "{{tomcat_group}}"
+    state: present
+
+- name: "add user {{tomcat_user}}"
+  user: 
+    name: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: present
+
+- name: install tomcat
+  become: yes
+  apt:
+    name: tomcat8
+    state: present
+
+- name: download geoserver war
+  become: yes
+  get_url: 
+    url: "{{geoserver_url}}"
+    dest: /tmp
+    remote_src: yes
+
+- name: unarchive geoserver war
+  become: yes
+  unarchive: 
+    src: "/tmp/geoserver-2.16.x-latest-war.zip"
+    dest: "{{tomcat_install_dir}}/webapps"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    remote_src: yes
+
+- name: Ensure tomcat service is started
+  systemd:
+    name: tomcat8
+    state: started
+    enabled: True
+    daemon_reload: yes

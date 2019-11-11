@@ -1,0 +1,12 @@
+openjdk_version: 8
+openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
+
+geoserver_url: https://build.geoserver.org/geoserver/2.16.x/geoserver-2.16.x-latest-war.zip
+
+tomcat_user: tomcat
+tomcat_group: tomcat
+
+tomcat_install_dir: /var/lib/tomcat8
+
+tomcat_java_home: /usr/lib/jvm/jre
+tomcat_service_name: tomcat

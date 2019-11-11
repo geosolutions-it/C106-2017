@@ -1,0 +1,9 @@
+---
+- name: first draft for loadbalancer
+  hosts: haproxy
+  become: yes
+  gather_facts: no
+  roles:
+    - baseline
+    - loadbalancer
+#    - webserver

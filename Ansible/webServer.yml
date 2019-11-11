@@ -1,0 +1,9 @@
+---
+- name: first draft for geoserver
+  hosts: geoserver
+  become: yes
+  gather_facts: no
+  roles:
+    - baseline
+#    - loadbalancer
+    - webserver
