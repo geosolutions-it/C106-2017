@@ -22,12 +22,15 @@
     url: "{{apt_key_url}}"
     state: present
 
-- name: install postgresql
+- name: install postgresql and postgis
   become: yes
   apt:
-    name: postgresql
+    name: "{{item}}"
     update_cache: yes
     state: present
+  with_items:
+  - postgresql
+  - postgresql-12-postgis-2.5
 
 # tomcat installation
 - name: "add group {{tomcat_group}}"
