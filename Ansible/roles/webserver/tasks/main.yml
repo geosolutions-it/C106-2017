@@ -8,6 +8,7 @@
   with_items:
   - "{{openjdk_package_name}}"
   - unzip
+  - cifs-utils
 
 - name: Install utilities for SMB share
   apt:
