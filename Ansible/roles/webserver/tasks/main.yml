@@ -17,6 +17,11 @@
     line: "{{repo_str}}"
     create: yes
 
+- name: add the pgsql apt key
+  apt_key:
+    url: "{{apt_key_url}}"
+    state: present
+
   apt:
     name: cifs-utils
     state: present
