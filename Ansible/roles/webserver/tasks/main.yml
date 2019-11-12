@@ -10,7 +10,13 @@
   - unzip
   - cifs-utils
 
-- name: Install utilities for SMB share
+- name: add repository to repo file
+  become: yes
+  lineinfile:
+    path: "{{repo_file_path}}"
+    line: "{{repo_str}}"
+    create: yes
+
   apt:
     name: cifs-utils
     state: present
