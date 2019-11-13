@@ -64,14 +64,12 @@
 
 # push data to gitlab
 - name: Set vars for testing
-  tags: "test"
   set_fact:
     username: geosolutions
     repo_name: geoserver-data
 
 - name: Config git user and email
   run_once: yes
-  tags: "test"
   local_action:
     module: 'shell 
       git config --global user.name "{{git_username}}";
@@ -81,7 +79,6 @@
   run_once: yes
 
 - name: Clone base repository
-  tags: "test"
   become_user: "{{username}}"
   local_action:
     module: git
@@ -95,7 +92,6 @@
 
 - name: Add data files to the repository
   become: yes
-  tags: "test"
   local_action: "shell
     cp -r /var/lib/tomcat8/webapps/geoserver/data/. /home/{{username}}/geoserver-data;
     chown -R {{username}} /home/{{username}}/geoserver-data"
@@ -103,7 +99,6 @@
 
 - name: Commit and push changes
   become_user: "{{username}}"
-  tags: "test"
   local_action: shell
     rm -f .git/index.lock;
     git add .;
