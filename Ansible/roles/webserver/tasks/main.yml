@@ -85,12 +85,18 @@
     name: tomcat8
     state: present
 
+- name: Check for downloaded geoserver war
+  stat:
+    path: "/tmp/geoserver-2.16.x-latest-war.zip"
+  register: downloaded
+
 - name: download geoserver war
   become: yes
   get_url: 
     url: "{{geoserver_url}}"
     dest: /tmp
     remote_src: yes
+  when: downloaded.stat.exists == False
 
 - name: unarchive geoserver war
   become: yes

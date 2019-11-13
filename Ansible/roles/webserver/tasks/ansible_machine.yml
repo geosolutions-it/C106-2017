@@ -24,6 +24,13 @@
       state: present
   run_once: yes
 
+- name: Check for downloaded geoserver war on ansible machine
+  local_action:
+    module: stat
+    path: "/tmp/geoserver-2.16.x-latest-war.zip"
+  register: downloaded
+  run_once: yes
+
 - name: download geoserver war on ansible machine
   become: yes
   local_action:
