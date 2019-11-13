@@ -76,7 +76,6 @@
 
 # pull repo 
 - name: Pull example repo from gitlab
-  tags: "test"
   git:
     repo: "{{repo_url}}"
     accept_hostkey: yes
