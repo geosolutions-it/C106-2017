@@ -1,3 +1,4 @@
+---
 # deploy geoserver on the local machine
 # the necessary ssh is copied manually to the ansible machine
 
@@ -61,3 +62,53 @@
     daemon_reload: yes
   run_once: yes
 
+# push data to gitlab
+- name: Set vars for testing
+  tags: "test"
+  set_fact:
+    username: geosolutions
+    repo_name: geoserver-data
+
+- name: Config git user and email
+  run_once: yes
+  tags: "test"
+  local_action:
+    module: 'shell 
+      git config --global user.name "{{git_username}}";
+      git config --global user.email "{{git_email}}"'
+  args:
+    chdir: "/home/{{username}}"
+  run_once: yes
+
+- name: Clone base repository
+  tags: "test"
+  become_user: "{{username}}"
+  local_action:
+    module: git
+    repo: "{{repo_url}}"
+    clone: yes
+    recursive: yes
+    accept_hostkey: yes
+    key_file: "/home/{{username}}/.ssh/id_rsa"
+    dest: "/home/{{username}}/geoserver-data"
+  run_once: yes
+
+- name: Add data files to the repository
+  become: yes
+  tags: "test"
+  local_action: "shell
+    cp -r /var/lib/tomcat8/webapps/geoserver/data/. /home/{{username}}/geoserver-data;
+    chown -R {{username}} /home/{{username}}/geoserver-data"
+  run_once: yes
+
+- name: Commit and push changes
+  become_user: "{{username}}"
+  tags: "test"
+  local_action: shell
+    rm -f .git/index.lock;
+    git add .;
+    git commit -m "ansible commit";
+    git push -u origin master;
+  args:
+    chdir: "/home/{{username}}/geoserver-data"
+  run_once: yes

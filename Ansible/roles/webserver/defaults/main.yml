@@ -1,3 +1,5 @@
+username: ubuntu
+
 #openjdk vars
 openjdk_version: 8
 openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
@@ -7,9 +9,11 @@ repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main"
 apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 
 # git vars
+git_username: Giacomo Consani
+git_email: giacomo.consani@libero.it
 repo_name: public-hello-webserver
 repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"
-repo_download_path: "/home/ubuntu/{{repo_name}}"
+repo_download_path: "/home/{{username}}/{{repo_name}}"
 
 source_key: credentials/id_rsa
 dest_key: /home/ubuntu/.ssh/id_rsa
