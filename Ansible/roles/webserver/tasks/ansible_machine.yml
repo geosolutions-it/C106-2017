@@ -1,0 +1,56 @@
+# deploy geoserver on the local machine
+# the necessary ssh is copied manually to the ansible machine
+
+- name: "add group {{tomcat_group}} on ansible machine"
+  local_action:
+    module: group
+    name: "{{tomcat_group}}"
+    state: present
+  run_once: yes
+
+- name: "add user {{tomcat_user}} on ansible machine"
+  local_action:
+    module: user
+    name: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: present
+  run_once: yes
+
+- name: install tomcat on ansible machine
+  become: yes
+  local_action:
+      module: apt
+      name: tomcat8
+      state: present
+  run_once: yes
+
+- name: download geoserver war on ansible machine
+  become: yes
+  local_action:
+    module: get_url 
+    url: "{{geoserver_url}}"
+    dest: /tmp
+    remote_src: yes
+    run_once: yes
+  when: downloaded.stat.exists == False
+
+- name: unarchive geoserver war on ansible machine
+  become: yes
+  local_action:
+    module: unarchive 
+    src: "/tmp/geoserver-2.16.x-latest-war.zip"
+    dest: "{{tomcat_install_dir}}/webapps"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    remote_src: yes
+  run_once: yes
+
+- name: Ensure tomcat service is started on ansible machine
+  local_action:
+    module: systemd
+    name: tomcat8
+    state: started
+    enabled: True
+    daemon_reload: yes
+  run_once: yes
+
