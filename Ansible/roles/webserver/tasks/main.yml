@@ -9,6 +9,7 @@
   - "{{openjdk_package_name}}"
   - unzip
   - cifs-utils
+  - git
 
 - name: add repository to repo file
   become: yes
@@ -31,6 +32,52 @@
   with_items:
   - postgresql
   - postgresql-12-postgis-2.5
+
+# git clone and pull
+# ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
+# ssh keys on gitlab profile are added manually
+# verify `known hosts` if it hangs up
+
+- name: Ensure .ssh directory exists.
+  file: 
+    dest: "/home/ubuntu/.ssh"
+    mode: 0700 
+    owner: ubuntu 
+    state: directory
+
+- name: Download ssh key
+  copy: 
+    src: "{{source_key}}" 
+    dest: "{{dest_key}}"
+    mode: 0600
+    owner: ubuntu
+
+- name: Check the repo directory
+  stat:
+    path: "{{repo_download_path}}"
+  register: repo
+
+# clone repo if it's not present
+- name: clone expample repo from gitlab
+  git:
+    repo: "{{repo_url}}"
+    clone: yes
+    recursive: yes
+    accept_hostkey: yes
+    key_file: /home/ubuntu/.ssh/id_rsa
+    dest: "{{repo_download_path}}/"
+  when: repo.stat.exists == False
+
+# pull repo 
+- name: Pull example repo from gitlab
+  tags: "test"
+  git:
+    repo: "{{repo_url}}"
+    accept_hostkey: yes
+    key_file: /home/ubuntu/.ssh/id_rsa
+    update: yes
+    dest: "{{repo_download_path}}/"
+  when: repo.stat.exists == True
 
 # tomcat installation
 - name: "add group {{tomcat_group}}"

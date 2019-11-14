@@ -6,6 +6,14 @@ repo_file_path: "/etc/apt/sources.list.d/pgdg.list"
 repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main"
 apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 
+# git vars
+repo_name: public-hello-webserver
+repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"
+repo_download_path: "/home/ubuntu/{{repo_name}}"
+
+source_key: credentials/id_rsa
+dest_key: /home/ubuntu/.ssh/id_rsa
+
 geoserver_url: https://build.geoserver.org/geoserver/2.16.x/geoserver-2.16.x-latest-war.zip
 
 tomcat_user: tomcat
