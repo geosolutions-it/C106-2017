@@ -39,12 +39,6 @@
   include_tasks: "ansible_machine.yml"
   when: extract_data is defined
 
-# the following tasks are for deploying geoserver on ansible machine, extract data, push to gitlab
-# to run these tasks; run playbook with --extra-vars "extract_data=0"
-- name: Including tasks to push geoserver/data to GL
-  include_tasks: "ansible_machine.yml"
-  when: extract_data is defined
-
 # git clone and pull
 # ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
 # ssh keys on gitlab profile are added manually

@@ -63,13 +63,13 @@
   run_once: yes
 
 # push data to gitlab
-- name: Set vars for testing
+# to do: move these in defaults when setting pull/clone tasks 
+- name: Set temporary vars
   set_fact:
     username: geosolutions
     repo_name: geoserver-data
 
 - name: Config git user and email
-  run_once: yes
   local_action:
     module: 'shell 
       git config --global user.name "{{git_username}}";
