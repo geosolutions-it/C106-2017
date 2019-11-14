@@ -87,7 +87,7 @@
     recursive: yes
     accept_hostkey: yes
     key_file: "/home/{{username}}/.ssh/id_rsa"
-    dest: "/home/{{username}}/geoserver-data"
+    dest: "/home/{{username}}/{{repo_name}}"
   run_once: yes
 
 - name: Add data files to the repository
@@ -105,5 +105,5 @@
     git commit -m "ansible commit";
     git push -u origin master;
   args:
-    chdir: "/home/{{username}}/geoserver-data"
+    chdir: "{{repo_download_path}}"
   run_once: yes
