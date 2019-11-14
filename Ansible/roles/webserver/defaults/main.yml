@@ -2,6 +2,10 @@
 openjdk_version: 8
 openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
 
+repo_file_path: "/etc/apt/sources.list.d/pgdg.list"
+repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main"
+apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+
 # git vars
 repo_name: public-hello-webserver
 repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"

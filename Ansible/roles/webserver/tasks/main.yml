@@ -8,12 +8,30 @@
   with_items:
   - "{{openjdk_package_name}}"
   - unzip
+  - cifs-utils
   - git
 
-- name: Install utilities for SMB share
-  apt:
-    name: cifs-utils
+- name: add repository to repo file
+  become: yes
+  lineinfile:
+    path: "{{repo_file_path}}"
+    line: "{{repo_str}}"
+    create: yes
+
+- name: add the pgsql apt key
+  apt_key:
+    url: "{{apt_key_url}}"
     state: present
+
+- name: install postgresql and postgis
+  become: yes
+  apt:
+    name: "{{item}}"
+    update_cache: yes
+    state: present
+  with_items:
+  - postgresql
+  - postgresql-12-postgis-2.5
 
 # git clone and pull
 # ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
