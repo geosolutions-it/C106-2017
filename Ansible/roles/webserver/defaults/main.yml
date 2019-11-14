@@ -1,5 +1,14 @@
+#openjdk vars
 openjdk_version: 8
 openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
+
+# git vars
+repo_name: public-hello-webserver
+repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"
+repo_download_path: "/home/ubuntu/{{repo_name}}"
+
+source_key: credentials/id_rsa
+dest_key: /home/ubuntu/.ssh/id_rsa
 
 geoserver_url: https://build.geoserver.org/geoserver/2.16.x/geoserver-2.16.x-latest-war.zip
 
