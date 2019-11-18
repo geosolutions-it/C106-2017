@@ -11,17 +11,19 @@
   - cifs-utils
   - git
 
-- name: add repository to repo file
+- name: Add repository to repo file
   become: yes
   lineinfile:
     path: "{{repo_file_path}}"
     line: "{{repo_str}}"
     create: yes
+  when: inventory_hostname != '127.0.0.1'
 
 - name: add the pgsql apt key
   apt_key:
     url: "{{apt_key_url}}"
     state: present
+  when: inventory_hostname != '127.0.0.1'
 
 - name: install postgresql and postgis
   become: yes
@@ -32,12 +34,7 @@
   with_items:
   - postgresql
   - postgresql-12-postgis-2.5
-
-# the following tasks are for deploying geoserver on ansible machine, extract data, push to gitlab
-# to run these tasks; run playbook with --extra-vars "extract_data=0"
-- name: Including tasks to push geoserver/data to GL
-  include_tasks: "ansible_machine.yml"
-  when: extract_data is defined
+  when: inventory_hostname != '127.0.0.1'
 
 # git clone and pull
 # ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
