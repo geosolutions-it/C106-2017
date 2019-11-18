@@ -121,9 +121,40 @@
     group: "{{tomcat_group}}"
     remote_src: yes
 
+- name: create audits dir
+  file:
+    path: "{{repo_download_path}}/audits"
+    state: directory
+    owner: tomcat
+    mode: 0700
+
+- name: Set JAVA_OPTS
+  become: yes
+  lineinfile:
+    path: /etc/default/tomcat8
+    line: "{{java_opts}}"
+
 - name: Ensure tomcat service is started
   systemd:
     name: tomcat8
     state: started
     enabled: True
     daemon_reload: yes
+
+- name: Config git user and email
+  shell: |
+      git config --global user.name {{git_username}}
+      git config --global user.email {{git_email}}
+  args:
+    chdir: "/home/{{username}}"
+  when: inventory_hostname == '127.0.0.1'
+
+- name: Commit and push changes
+  shell: |
+    rm -f .git/index.lock;
+    git add .;
+    git commit -m "ansible commit";
+    git push -u origin master;
+  args:
+    chdir: "{{repo_download_path}}"
+  when: inventory_hostname == '127.0.0.1'
