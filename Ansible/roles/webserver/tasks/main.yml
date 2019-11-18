@@ -11,17 +11,19 @@
   - cifs-utils
   - git
 
-- name: add repository to repo file
+- name: Add repository to repo file
   become: yes
   lineinfile:
     path: "{{repo_file_path}}"
     line: "{{repo_str}}"
     create: yes
+  when: inventory_hostname != '127.0.0.1'
 
 - name: add the pgsql apt key
   apt_key:
     url: "{{apt_key_url}}"
     state: present
+  when: inventory_hostname != '127.0.0.1'
 
 - name: install postgresql and postgis
   become: yes
@@ -32,6 +34,7 @@
   with_items:
   - postgresql
   - postgresql-12-postgis-2.5
+  when: inventory_hostname != '127.0.0.1'
 
 # git clone and pull
 # ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
@@ -40,9 +43,9 @@
 
 - name: Ensure .ssh directory exists.
   file: 
-    dest: "/home/ubuntu/.ssh"
+    dest: "/home/{{username}}/.ssh"
     mode: 0700 
-    owner: ubuntu 
+    owner: "{{username}}" 
     state: directory
 
 - name: Download ssh key
@@ -50,7 +53,7 @@
     src: "{{source_key}}" 
     dest: "{{dest_key}}"
     mode: 0600
-    owner: ubuntu
+    owner: "{{username}}"
 
 - name: Check the repo directory
   stat:
@@ -58,23 +61,24 @@
   register: repo
 
 # clone repo if it's not present
-- name: clone expample repo from gitlab
+- name: Clone datadir from gitlab
+  become: yes
   git:
     repo: "{{repo_url}}"
     clone: yes
     recursive: yes
     accept_hostkey: yes
-    key_file: /home/ubuntu/.ssh/id_rsa
+    key_file: "/home/{{username}}/.ssh/id_rsa"
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == False
 
 # pull repo 
-- name: Pull example repo from gitlab
-  tags: "test"
+- name: Pull datadir from gitlab
+  become_method: sudo
   git:
     repo: "{{repo_url}}"
     accept_hostkey: yes
-    key_file: /home/ubuntu/.ssh/id_rsa
+    key_file: "/home/{{username}}/.ssh/id_rsa"
     update: yes
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == True
@@ -97,21 +101,40 @@
     name: tomcat8
     state: present
 
+- name: Check for downloaded geoserver war
+  stat:
+    path: "/tmp/{{geoserver_version}}.zip"
+  register: downloaded
+
 - name: download geoserver war
   become: yes
   get_url: 
     url: "{{geoserver_url}}"
     dest: /tmp
     remote_src: yes
+  when: downloaded.stat.exists == False
 
 - name: unarchive geoserver war
   become: yes
   unarchive: 
-    src: "/tmp/geoserver-2.16.x-latest-war.zip"
+    src: "/tmp/{{geoserver_version}}.zip"
     dest: "{{tomcat_install_dir}}/webapps"
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
     remote_src: yes
+
+- name: create audits dir
+  file:
+    path: "{{repo_download_path}}/audits"
+    state: directory
+    owner: tomcat
+    mode: 0700
+
+- name: Set JAVA_OPTS
+  become: yes
+  lineinfile:
+    path: /etc/default/tomcat8
+    line: "{{java_opts}}"
 
 - name: Ensure tomcat service is started
   systemd:
@@ -119,3 +142,21 @@
     state: started
     enabled: True
     daemon_reload: yes
+
+- name: Config git user and email
+  shell: |
+      git config --global user.name {{git_username}}
+      git config --global user.email {{git_email}}
+  args:
+    chdir: "/home/{{username}}"
+  when: inventory_hostname == '127.0.0.1'
+
+- name: Commit and push changes
+  shell: |
+    rm -f .git/index.lock;
+    git add .;
+    git commit -m "ansible commit";
+    git push -u origin master;
+  args:
+    chdir: "{{repo_download_path}}"
+  when: inventory_hostname == '127.0.0.1'
