@@ -30,3 +30,16 @@ tomcat_install_dir: /var/lib/tomcat8
 
 tomcat_java_home: /usr/lib/jvm/jre
 tomcat_service_name: tomcat
+
+java_opts: |
+  'JAVA_OPTS="-Xms1024m -Xmx1024m 
+  -XX:+UseParallelGC -XX:+UseParallelOldGC 
+  -DGEOSERVER_DATA_DIR={{repo_download_path}} 
+  -DGEOWEBCACHE_CONFIG_DIR={{repo_download_path}}/gwc 
+  -DGEOSERVER_LOG_LOCATION={{repo_download_path}}/logs/dir/geoserver.log 
+  -DGEOSERVER_NODE_OPTS=id:<color> 
+  -DALLOW_ENV_PARAMETRIZATION=true 
+  -Xbootclasspath/a:/var/lib/tomcat8/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar 
+  -Xbootclasspath/p:/var/lib/tomcat8/webapps/dir/geoserver/WEB-INF/lib/marlin-0.9.3.jar 
+  -DGEOSERVER_AUDIT_PATH={{repo_download_path}}/audits 
+  -DPROXY_BASE_URL=http://publichostname/geoserver"'
