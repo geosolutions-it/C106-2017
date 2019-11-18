@@ -11,14 +11,17 @@ apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 # git vars
 git_username: Giacomo Consani
 git_email: giacomo.consani@libero.it
-repo_name: public-hello-webserver
+repo_name: geoserver-data
 repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"
 repo_download_path: "/home/{{username}}/{{repo_name}}"
+repo_des: "/var/lib/tomcat8/{{repo_name}}"
 
 source_key: credentials/id_rsa
-dest_key: /home/ubuntu/.ssh/id_rsa
+dest_key: "/home/{{username}}/.ssh/id_rsa"
 
-geoserver_url: https://build.geoserver.org/geoserver/2.16.x/geoserver-2.16.x-latest-war.zip
+geoserver_version_number: 2.16.x
+geoserver_version: "geoserver-{{geoserver_version_number}}-latest-war"
+geoserver_url: "https://build.geoserver.org/geoserver/{{geoserver_version_number}}/{{geoserver_version}}.zip"
 
 tomcat_user: tomcat
 tomcat_group: tomcat
