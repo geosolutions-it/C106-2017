@@ -48,3 +48,33 @@ To modify the file, position yourself in `Ansible` and use the command `ansible-
 
 To replace the key with your own encrypted key, copy your key file inside credentials and launch `ansible-vault encrypt credentials/filename`
 
+## The playbook
+
+It is the core component of this configuration, it contains all the tasks that are going to be performed and more environment specific options.
+Run it by positioning yourself in the Ansible folder and issuing the following commands
+
+To launch the playbook on the loadblancing dedicated machines, use the following command.
+
+```bash
+ansible-playbook loadBalancer.yml --ask-become-pass
+```
+
+Or use the following if you want to work on the geoserver machines.
+
+```bash
+ansible-playbook webServer.yml --ask-become-pass --ask-vault-pass
+```
+
+As stated previously, remove `--ask-vault-pass` if you are not using any encrypted file.
+
+You can limit your run to one or more roles or tasks by editing the playbook in this way
+
+```yml
+- { role: rolename, tags: "tagname" }
+```
+
+and launching the playbook with  ```--tags "tagname"```
+
+```shell
+ansible-playbook playbook.yml --ask-become-pass --ask-vault-pass --tags "tagname"
+```
