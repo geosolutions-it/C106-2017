@@ -36,3 +36,15 @@ Then install ansible
 pip install --user ansible
 ```
 
+## Credentials
+
+The purpose of the credentials folder is to store sensitive data. The file 'id_rsa' is an encrypted private key, ansible can work with it via the `credentials.yml` file.
+
+To launch ansible with the ability to unlock the encrypted file, add `--ask-vault-pass` to the launch command.
+
+The encrypted file can be replaced with a clear text key, in such case launching ansible with `--ask-vault-pass` is unnecessary-
+
+To modify the file, position yourself in `Ansible` and use the command `ansible-vault edit credentials/id_rsa`.
+
+To replace the key with your own encrypted key, copy your key file inside credentials and launch `ansible-vault encrypt credentials/filename`
+
