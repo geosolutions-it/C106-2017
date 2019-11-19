@@ -89,12 +89,13 @@
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == True
 
-- name: Check for downloaded geoserver war
+# Install GeoServer WAR
+- name: Check for downloaded geoserver WAR
   stat:
     path: "/tmp/{{geoserver_version}}.zip"
   register: downloaded
 
-- name: download geoserver war
+- name: Download GeoServer
   become: yes
   get_url: 
     url: "{{geoserver_url}}"
@@ -102,14 +103,20 @@
     remote_src: yes
   when: downloaded.stat.exists == False
 
-- name: unarchive geoserver war
+- name: Extract GeoServer WAR
   become: yes
   unarchive: 
     src: "/tmp/{{geoserver_version}}.zip"
-    dest: "{{tomcat_install_dir}}/webapps"
+    dest: "{{catalina_base}}/webapps"
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
     remote_src: yes
+
+- name: Set JAVA_OPTS
+  become: yes
+  lineinfile:
+    path: /etc/default/tomcat8
+    line: "{{java_opts}}"
 
 - name: create audits dir
   file:
@@ -117,12 +124,6 @@
     state: directory
     owner: tomcat
     mode: 0700
-
-- name: Set JAVA_OPTS
-  become: yes
-  lineinfile:
-    path: /etc/default/tomcat8
-    line: "{{java_opts}}"
 
 - name: Ensure tomcat service is started
   systemd:
@@ -139,12 +140,12 @@
     chdir: "/home/{{username}}"
   when: inventory_hostname == '127.0.0.1'
 
-- name: Commit and push changes
-  shell: |
-    rm -f .git/index.lock;
-    git add .;
-    git commit -m "ansible commit";
-    git push -u origin master;
-  args:
-    chdir: "{{repo_download_path}}"
-  when: inventory_hostname == '127.0.0.1'
+#- name: Commit and push changes
+#  shell: |
+#    rm -f .git/index.lock;
+#    git add .;
+#    git commit -m "ansible commit";
+#    git push -u origin master;
+#  args:
+#    chdir: "{{repo_download_path}}"
+#  when: inventory_hostname == '127.0.0.1'
