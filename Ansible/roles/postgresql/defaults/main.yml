@@ -1,0 +1,9 @@
+# postgresql / postgis
+ubuntu_release_codename: "bionic"
+pg_repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ {{ubuntu_release_codename}}-pgdg main"
+pg_repo_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+pg_version: "12"
+pgis_version: "2.5"
+pg_package: "postgresql-{{pg_version}}"
+pgis_package: "postgresql-{{pg_version}}-postgis-{{pgis_version}}"
+

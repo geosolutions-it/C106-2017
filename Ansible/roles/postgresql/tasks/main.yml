@@ -1,0 +1,36 @@
+---
+# Prerequisites
+- name: Ensure prerequisites are installed
+  become: yes
+  apt:
+    name: 
+      - "{{openjdk_package_name}}"
+      - unzip
+      - cifs-utils
+      - git
+    state: present
+
+# PostgreSQL
+- name: Add PostgreSQL repository
+  become: yes
+  lineinfile:
+    path: "/etc/apt/sources.list.d/pgdg.list"
+    line: "{{pg_repo_str}}"
+    create: yes
+  when: inventory_hostname != '127.0.0.1'
+
+- name: Add PostgreSQL repository key
+  apt_key:
+    url: "{{pg_repo_key_url}}"
+    state: present
+  when: inventory_hostname != '127.0.0.1'
+
+- name: Install PostgreSQL and Postgis
+  become: yes
+  apt:
+    name:
+      - "{{pg_package}}"
+      - "{{pgis_package}}"
+    update_cache: yes
+    state: present
+  when: inventory_hostname != '127.0.0.1'

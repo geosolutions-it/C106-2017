@@ -3,69 +3,62 @@
 - name: Ensure prerequisites are installed
   become: yes
   apt:
-    name: "{{item}}"
+    name: 
+      - "{{openjdk_package_name}}"
+      - unzip
+      - cifs-utils
+      - git
     state: present
-  with_items:
-  - "{{openjdk_package_name}}"
-  - unzip
-  - cifs-utils
-  - git
-
-# PostgreSQL
-- name: Add PostgreSQL repository
-  become: yes
-  lineinfile:
-    path: "/etc/apt/sources.list.d/pgdg.list"
-    line: "{{pg_repo_str}}"
-    create: yes
-  when: inventory_hostname != '127.0.0.1'
-
-- name: Add PostgreSQL repository key
-  apt_key:
-    url: "{{pg_repo_key_url}}"
-    state: present
-  when: inventory_hostname != '127.0.0.1'
-
-- name: Install PostgreSQL and Postgis
-  become: yes
-  apt:
-    name: "{{item}}"
-    update_cache: yes
-    state: present
-  with_items:
-  - postgresql
-  - postgresql-12-postgis-2.5
-  when: inventory_hostname != '127.0.0.1'
-
-# GeoServer Datadir
-- name: Ensure .ssh directory exists.
-  file: 
-    dest: "/home/{{username}}/.ssh"
-    mode: 0700 
-    owner: "{{username}}" 
-    state: directory
-
-# Install Gitlab Deply Key
-- name: Download ssh key
-  copy: 
-    src: "{{source_key}}" 
-    dest: "{{dest_key}}"
-    mode: 0600
-    owner: "{{username}}"
-
-- name: Local repo already exists?
-  stat:
-    path: "{{repo_download_path}}"
-  register: repo
 
 # Tomcat installation
 - name: install tomcat
   become: yes
   apt:
-    name: tomcat8
+    name: "{{tomcat_user}}"
     state: present
 
+- name: Fix permissions
+  become: yes
+  file:
+    dest: "{{catalina_base}}"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+
+# GeoServer Datadir
+- name: Ensure .ssh directory exists.
+  become: yes
+  file: 
+    dest: "{{dest_key}}"
+    mode: 0700 
+    owner: "{{tomcat_user}}" 
+    state: directory
+
+# Install Gitlab Deply Key
+- name: Download ssh key
+  become: yes
+  become_user: "{{tomcat_user}}"
+  become_method: sudo
+  copy: 
+    src: "{{source_key}}" 
+    dest: "{{dest_key}}/id_rsa"
+    mode: 0600
+    owner: "{{tomcat_user}}"
+
+  # GeoServer Datadir
+- name: Ensure .ssh directory exists.
+  become: yes
+  file:
+    dest: "{{dest_key}}"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: directory
+
 # Clone datadir repo
+- name: Local repo already exists?
+  stat:
+    path: "{{repo_download_path}}"
+  register: repo
+
 - name: Clone datadir from gitlab
   become: yes
   git:
@@ -73,21 +66,29 @@
     clone: yes
     recursive: yes
     accept_hostkey: yes
-    key_file: "{{dest_key}}"
+    key_file: "{{dest_key}}/id_rsa"
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == False
 
+- name: Fix permissions
+  become: yes
+  file:
+    dest: "{{repo_download_path}}"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    recurse: yes
+
 # Git pull
 - name: Pull datadir from gitlab
-  become_user: tomcat8
+  become: yes
+  become_user: "{{tomcat_user}}"
   become_method: sudo
   git:
     repo: "{{repo_url}}"
     accept_hostkey: yes
-    key_file: "{{ansible_env.HOME}}/.ssh/id_rsa"
+    key_file: "{{dest_key}}/.ssh/id_rsa"
     update: yes
     dest: "{{repo_download_path}}/"
-  when: repo.stat.exists == True
 
 # Install GeoServer WAR
 - name: Check for downloaded geoserver WAR
@@ -97,6 +98,8 @@
 
 - name: Download GeoServer
   become: yes
+  become_user: "{{tomcat_user}}"
+  become_method: sudo
   get_url: 
     url: "{{geoserver_url}}"
     dest: /tmp
@@ -105,6 +108,8 @@
 
 - name: Extract GeoServer WAR
   become: yes
+  become_user: "{{tomcat_user}}"
+  become_method: sudo
   unarchive: 
     src: "/tmp/{{geoserver_version}}.zip"
     dest: "{{catalina_base}}/webapps"
@@ -117,25 +122,32 @@
   lineinfile:
     path: /etc/default/tomcat8
     line: "{{java_opts}}"
+  tags:
+    - debug
 
 - name: create audits dir
+  become: yes
   file:
-    path: "{{repo_download_path}}/audits"
+    path: "{{catalina_base}}/audits"
     state: directory
-    owner: {{tomcat_user}}
+    owner: "{{tomcat_user}}"
     mode: 0700
 
 - name: Restart Tomcat
+  become: yes
   systemd:
     name: tomcat8
     state: restarted
 
 - name: Config git user and email
+  become: yes
+  become_user: "{{tomcat_user}}"
+  become_method: sudo
   shell: |
       git config --global user.name {{git_username}}
       git config --global user.email {{git_email}}
   args:
-    chdir: "/home/{{username}}"
+    chdir: "{{repo_download_path}}"
   when: inventory_hostname == '127.0.0.1'
 
 #- name: Commit and push changes
@@ -147,3 +159,4 @@
 #  args:
 #    chdir: "{{repo_download_path}}"
 #  when: inventory_hostname == '127.0.0.1'
+

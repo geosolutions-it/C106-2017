@@ -1,0 +1,38 @@
+#openjdk vars
+openjdk_version: 8
+openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
+
+# postgresql / postgis
+ubuntu_release_codename: "bionic"
+pg_repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ {{ubuntu_release_codename}}-pgdg main"
+pg_repo_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+pg_version: "12"
+pgis_version: "2.5"
+pg_package: "postgresql-{{pg_version}}"
+pgis_package: "postgresql-{{pg_version}}-postgis-{{pgis_version}}"
+
+# tomcat
+tomcat_user: tomcat8
+tomcat_group: tomcat8
+catalina_base: /var/lib/tomcat8
+tomcat_java_home: /usr/lib/jvm/jre
+tomcat_service_name: tomcat8
+datadir_path: "{{catalina_base}}/{{repo_name}}"
+audits_path: "{{catalina_base}}/audits"
+
+java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOSERVER_LOG_LOCATION={{catalina_base}}/logs/geoserver.log -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{datadir_path}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Xbootclasspath/p:{{catalina_base}}/webapps/dir/geoserver/WEB-INF/lib/marlin-0.9.3.jar -DGEOSERVER_AUDIT_PATH={{audits_path}}"
+
+# datadir repo
+git_username: Alessandro Parma
+git_email: alessa.parma@gmail.com
+repo_name: geoserver-datadir
+repo_url: "git@gitlab.com:alessandro.parma/{{repo_name}}.git"
+repo_download_path: "/var/lib/tomcat8/{{repo_name}}"
+repo_des: "/var/lib/tomcat8/{{repo_name}}"
+source_key: credentials/id_rsa
+dest_key: "{{catalina_base}}/.ssh"
+
+geoserver_version_number: 2.16.x
+geoserver_version: "geoserver-{{geoserver_version_number}}-latest-war"
+geoserver_url: "https://build.geoserver.org/geoserver/{{geoserver_version_number}}/{{geoserver_version}}.zip"
+
