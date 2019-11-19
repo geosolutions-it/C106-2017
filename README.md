@@ -56,18 +56,19 @@ To modify the file, position yourself in `Ansible` and use the command `ansible-
 
 To replace the key with your own encrypted key, copy your key file inside credentials and launch `ansible-vault encrypt credentials/filename`
 
-## The playbook
+## Run the playbook
 
 It is the core component of this configuration, it contains all the tasks that are going to be performed and more environment specific options.
-Run it by positioning yourself in the Ansible folder and issuing the following commands
 
-To launch the playbook on the loadblancing dedicated machines, use the following command.
+Change directory into `Ansible` folder, then update the `inventory.ini` file with the actual IP addresses of the target machines.
+
+Then launch the playbook for the load balancers:
 
 ```bash
 ansible-playbook loadBalancer.yml --ask-become-pass
 ```
 
-Or use the following if you want to work on the geoserver machines.
+And the playbook for the webservers:
 
 ```bash
 ansible-playbook webServer.yml --ask-become-pass --ask-vault-pass
