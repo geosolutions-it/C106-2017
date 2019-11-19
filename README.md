@@ -65,14 +65,17 @@ Change directory into `Ansible` folder, then update the `inventory.ini` file wit
 Then launch the playbook for the load balancers:
 
 ```bash
-ansible-playbook loadBalancer.yml --ask-become-pass
+ansible-playbook loadBalancer.yml
 ```
+
+ <strong>Note</strong>: if password is required for sudo privileges on the target machine, append the `--ask-become-pass` parameter to the command above
 
 And the playbook for the webservers:
 
 ```bash
-ansible-playbook webServer.yml --ask-become-pass --ask-vault-pass
+ansible-playbook webServer.yml --ask-vault-pass
 ```
+ <strong>Note</strong>: if password is required for sudo privileges on the target machine, append the `--ask-become-pass` parameter to the command above
 
 As stated previously, remove `--ask-vault-pass` if you are not using any encrypted file.
 
