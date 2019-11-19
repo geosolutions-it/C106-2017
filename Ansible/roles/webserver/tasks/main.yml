@@ -84,7 +84,7 @@
   git:
     repo: "{{repo_url}}"
     accept_hostkey: yes
-    key_file: "/home/{{username}}/.ssh/id_rsa"
+    key_file: "{{ansible_env.HOME}}/.ssh/id_rsa"
     update: yes
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == True
@@ -122,15 +122,13 @@
   file:
     path: "{{repo_download_path}}/audits"
     state: directory
-    owner: tomcat
+    owner: {{tomcat_user}}
     mode: 0700
 
-- name: Ensure tomcat service is started
+- name: Restart Tomcat
   systemd:
     name: tomcat8
-    state: started
-    enabled: True
-    daemon_reload: yes
+    state: restarted
 
 - name: Config git user and email
   shell: |
