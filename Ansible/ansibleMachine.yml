@@ -1,0 +1,9 @@
+---
+- name: Ansible Machine
+  hosts: ansible_machine
+  become: yes
+  gather_facts: no
+  roles:
+    - baseline
+    - postgresql
+    - geoserver
