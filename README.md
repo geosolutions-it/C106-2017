@@ -34,6 +34,7 @@ Install Pip
 ```sh
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py --user
+export "PATH=$PATH:/home/ubuntu/.local/bin/pip"
 echo "PATH=$PATH:/home/ubuntu/.local/bin/pip" >> ~/.bashrc
 ```
 
