@@ -4,15 +4,20 @@ username: ubuntu
 openjdk_version: 8
 openjdk_package_name: "openjdk-{{openjdk_version}}-jdk"
 
-repo_file_path: "/etc/apt/sources.list.d/pgdg.list"
-repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main"
-apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+# postgresql / postgis
+ubuntu_release_codename: "bionic"
+pg_repo_str: "deb http://apt.postgresql.org/pub/repos/apt/ {{ubuntu_release_codename}}-pgdg main"
+pg_repo_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+pg_version: "12"
+pgis_version: "2.5"
+pg_package: "postgresql-{{pg_version}}"
+pgis: "postgresql-{{pg_version}}-postgis-{{pgis_version}}"
 
-# git vars
-git_username: Giacomo Consani
-git_email: giacomo.consani@libero.it
-repo_name: geoserver-data
-repo_url: "git@gitlab.com:giacomoc92/{{repo_name}}.git"
+# datadir repo
+git_username: Alessandro Parma
+git_email: alessa.parma@gmail.com
+repo_name: geoserver-datadir
+repo_url: "git@gitlab.com:alessandro.parma/{{repo_name}}.git"
 repo_download_path: "/home/{{username}}/{{repo_name}}"
 repo_des: "/var/lib/tomcat8/{{repo_name}}"
 
