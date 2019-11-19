@@ -7,7 +7,7 @@ Ansible Automation
 **Manager node:**
 
 - Ubuntu 18.04
-- Python Python 2.7.15
+- Python Python 2.7.15+
 - SSH
 - Ansible 2.9
 
@@ -21,19 +21,27 @@ Ansible Automation
 Ansible by default manages machines over SSH and assumes SSH keys are being used.
 Ansible only needs to be installed on a machine to be able to manage other machines and it doesn't leave software installed or running on managed machines.
 
-### Install the latest version via pip
+### Install Python
+```sh
+sudo apt update
+sudo apt install python
+```
 
-Install the Python package manager
+### Install Ansible via pip
+
+Install Pip
 
 ```sh
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py --user
+echo "PATH=$PATH:/home/ubuntu/.local/bin/pip" >> ~/.bashrc
 ```
 
 Then install ansible
 
 ```sh
 pip install --user ansible
+ansible --version
 ```
 
 ## Credentials
