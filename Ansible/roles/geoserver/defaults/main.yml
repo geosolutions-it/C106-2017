@@ -20,7 +20,7 @@ tomcat_service_name: tomcat8
 datadir_path: "{{catalina_base}}/{{repo_name}}"
 audits_path: "{{catalina_base}}/audits"
 
-java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOSERVER_LOG_LOCATION={{catalina_base}}/logs/geoserver.log -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{datadir_path}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Xbootclasspath/p:{{catalina_base}}/webapps/dir/geoserver/WEB-INF/lib/marlin-0.9.3.jar -DGEOSERVER_AUDIT_PATH={{audits_path}}"
+java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOSERVER_LOG_LOCATION={{catalina_base}}/logs/geoserver.log -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{catalina_base}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Dsun.java2d.renderer=org.marlin.pisces.MarlinRenderingEngine -DGEOSERVER_AUDIT_PATH={{audits_path}}"
 
 # datadir repo
 git_username: Alessandro Parma
