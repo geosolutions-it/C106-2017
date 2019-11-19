@@ -1,5 +1,5 @@
 ---
-# prerequisites installation
+# Prerequisites
 - name: Ensure prerequisites are installed
   become: yes
   apt:
@@ -11,21 +11,22 @@
   - cifs-utils
   - git
 
-- name: Add repository to repo file
+# PostgreSQL
+- name: Add PostgreSQL repository
   become: yes
   lineinfile:
-    path: "{{repo_file_path}}"
-    line: "{{repo_str}}"
+    path: "/etc/apt/sources.list.d/pgdg.list"
+    line: "{{pg_repo_str}}"
     create: yes
   when: inventory_hostname != '127.0.0.1'
 
-- name: add the pgsql apt key
+- name: Add PostgreSQL repository key
   apt_key:
-    url: "{{apt_key_url}}"
+    url: "{{pg_repo_key_url}}"
     state: present
   when: inventory_hostname != '127.0.0.1'
 
-- name: install postgresql and postgis
+- name: Install PostgreSQL and Postgis
   become: yes
   apt:
     name: "{{item}}"
@@ -36,11 +37,7 @@
   - postgresql-12-postgis-2.5
   when: inventory_hostname != '127.0.0.1'
 
-# git clone and pull
-# ssh key is manually created, placed in ansible/credentials and encrypted with ansible-vault
-# ssh keys on gitlab profile are added manually
-# verify `known hosts` if it hangs up
-
+# GeoServer
 - name: Ensure .ssh directory exists.
   file: 
     dest: "/home/{{username}}/.ssh"
@@ -60,7 +57,7 @@
     path: "{{repo_download_path}}"
   register: repo
 
-# clone repo if it's not present
+# Clone Datadir Repo from Gitlab
 - name: Clone datadir from gitlab
   become: yes
   git:
