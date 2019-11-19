@@ -37,7 +37,7 @@
   - postgresql-12-postgis-2.5
   when: inventory_hostname != '127.0.0.1'
 
-# GeoServer
+# GeoServer Datadir
 - name: Ensure .ssh directory exists.
   file: 
     dest: "/home/{{username}}/.ssh"
@@ -45,6 +45,7 @@
     owner: "{{username}}" 
     state: directory
 
+# Install Gitlab Deply Key
 - name: Download ssh key
   copy: 
     src: "{{source_key}}" 
@@ -52,12 +53,19 @@
     mode: 0600
     owner: "{{username}}"
 
-- name: Check the repo directory
+- name: Local repo already exists?
   stat:
     path: "{{repo_download_path}}"
   register: repo
 
-# Clone Datadir Repo from Gitlab
+# Tomcat installation
+- name: install tomcat
+  become: yes
+  apt:
+    name: tomcat8
+    state: present
+
+# Clone datadir repo
 - name: Clone datadir from gitlab
   become: yes
   git:
@@ -65,12 +73,13 @@
     clone: yes
     recursive: yes
     accept_hostkey: yes
-    key_file: "/home/{{username}}/.ssh/id_rsa"
+    key_file: "{{dest_key}}"
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == False
 
-# pull repo 
+# Git pull
 - name: Pull datadir from gitlab
+  become_user: tomcat8
   become_method: sudo
   git:
     repo: "{{repo_url}}"
@@ -79,24 +88,6 @@
     update: yes
     dest: "{{repo_download_path}}/"
   when: repo.stat.exists == True
-
-# tomcat installation
-- name: "add group {{tomcat_group}}"
-  group:
-    name: "{{tomcat_group}}"
-    state: present
-
-- name: "add user {{tomcat_user}}"
-  user: 
-    name: "{{tomcat_user}}"
-    group: "{{tomcat_group}}"
-    state: present
-
-- name: install tomcat
-  become: yes
-  apt:
-    name: tomcat8
-    state: present
 
 - name: Check for downloaded geoserver war
   stat:

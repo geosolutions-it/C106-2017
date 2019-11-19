@@ -1,9 +1,8 @@
 ---
-- name: first draft for geoserver
+- name: GeoServer Slave Machines
   hosts: geoserver
   become: yes
   gather_facts: no
   roles:
     - baseline
-#    - loadbalancer
     - webserver
