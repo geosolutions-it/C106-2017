@@ -1,0 +1,2 @@
+---
+loadbalancer_url: "http://{{loadbalancer}}/geoserver/web/"
