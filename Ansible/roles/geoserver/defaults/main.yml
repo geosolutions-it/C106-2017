@@ -17,11 +17,12 @@ tomcat_group: tomcat8
 catalina_base: /var/lib/tomcat8
 tomcat_java_home: /usr/lib/jvm/jre
 tomcat_service_name: tomcat8
+tomcat_allowed_origins: "*"
 datadir_path: "{{catalina_base}}/{{repo_name}}"
 audits_path: "{{catalina_base}}/audits"
 gwc_cache_dir: "{{catalina_base}}/gwc_cache_dir"
 
-java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOWEBCACHE_CACHE_DIR={{gwc_cache_dir}} -DGEOSERVER_LOG_LOCATION={{catalina_base}}/logs/geoserver.log -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{catalina_base}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Dsun.java2d.renderer=org.marlin.pisces.MarlinRenderingEngine -DGEOSERVER_AUDIT_PATH={{audits_path}} -DENABLE_JSONP=true"
+java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOWEBCACHE_CACHE_DIR={{gwc_cache_dir}} -DGEOSERVER_LOG_LOCATION={{catalina_base}}/logs/geoserver.log -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{catalina_base}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Dsun.java2d.renderer=org.marlin.pisces.MarlinRenderingEngine -DGEOSERVER_AUDIT_PATH={{audits_path}} -DENABLE_JSONP=true -Dorg.geotools.localDateTimeHandling=true"
 
 # datadir repo
 git_username: Alessandro Parma
