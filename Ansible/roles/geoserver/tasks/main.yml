@@ -147,9 +147,30 @@
   args:
     chdir: "{{repo_download_path}}"
 
+# Install Extra fonts
+- name: Install debconf-utils
+  become: yes
+  apt:
+    name:
+      - debconf-utils
+    state: present
+
+- name: Accept EULA
+  become: yes
+  command:
+    cmd: echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+
+- name: Install Extra Fonts
+  become: yes
+  tags: [ debug ]
+  apt:
+    name:
+      - ttf-mscorefonts-installer
+    state: present
+
 # GeoServer conf reload
 - name: Discard local changes to datadir
-  tags: [ never, config_update, debug ]
+  tags: [ never, config_update ]
   become: yes
   become_user: "{{tomcat_user}}"
   become_method: sudo
