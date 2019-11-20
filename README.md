@@ -63,7 +63,27 @@ It is the core component of this configuration, it contains all the tasks that a
 
 Change directory into `Ansible` folder, then update the `inventory.ini` file with the actual IP addresses of the target machines.
 
-Then launch the playbook for the load balancers:
+### Unlocking Ansible Vault
+
+To unlock the [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html) a password is required. Such password can be input interactively at runtime by providing the `--ask-vault-pass` parameter to ansible or non interactivally via a vault password file. The path to such file can be set via a parameter to ansible or an environment variable:
+
+Create the password file
+```
+echo "mypassword" > ~/.vault_pass
+chmod 600 ~/.vault_pass
+```
+
+Using the password file parameter, appending the following to ansible commands:
+```
+--vault-password-file ~/.vault_pass
+```
+
+Via environment variable:
+```
+export ANSIBLE_VAULT_PASSWORD_FILE=~/.vault_pass
+```
+
+### Run the playbook for the load balancers
 
 ```bash
 ansible-playbook loadBalancer.yml
@@ -71,7 +91,7 @@ ansible-playbook loadBalancer.yml
 
  <strong>Note</strong>: if password is required for sudo privileges on the target machine, append the `--ask-become-pass` parameter to the command above
 
-And the playbook for the webservers:
+### Run playbook for the webservers:
 
 ```bash
 ansible-playbook webServer.yml --ask-vault-pass
