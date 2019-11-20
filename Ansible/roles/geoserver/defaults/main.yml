@@ -38,4 +38,6 @@ geoserver_admin_pass: "geoserver"
 geoserver_version_number: 2.16.x
 geoserver_version: "geoserver-{{geoserver_version_number}}-latest-war"
 geoserver_url: "https://build.geoserver.org/geoserver/{{geoserver_version_number}}/{{geoserver_version}}.zip"
-
+geoserver_pg_user: geoserver
+geoserver_pg_pass: geoserver 
+geoserver_conext_xml: credentials/geoserver_conext_xml

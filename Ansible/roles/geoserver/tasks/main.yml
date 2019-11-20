@@ -8,6 +8,7 @@
       - unzip
       - cifs-utils
       - git
+      - python-psycopg2
     state: present
 
 # Tomcat installation
@@ -162,11 +163,37 @@
 
 - name: Install Extra Fonts
   become: yes
-  tags: [ debug ]
   apt:
     name:
       - ttf-mscorefonts-installer
     state: present
+
+# Configure DB Access
+- name: Create GeoServer DB in PostgreSQL
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_db:
+    name: geoserver
+
+- name: Create GeoServer user and grant privileges
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_user:
+    name: geoserver
+    name: "{{geoserver_pg_user}}"
+    password: "{{geoserver_pg_pass}}"
+    db: geoserver
+    priv: "ALL"
+
+- name: Install context file
+  become: yes
+  template:
+    src: context.xml.j2
+    dest: "{{catalina_base}}/conf/context.xml"
+    mode: 0600
+    owner: "{{tomcat_user}}"
 
 # GeoServer conf reload
 - name: Discard local changes to datadir
@@ -182,7 +209,6 @@
     force: yes
     dest: "{{repo_download_path}}/"
   when: "'geoserver' in group_names"
-
 
 - name: Reload GeoServer configuration
   tags: [ never, config_update, reload ]
