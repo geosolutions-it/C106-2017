@@ -122,8 +122,6 @@
   lineinfile:
     path: /etc/default/tomcat8
     line: "{{java_opts}}"
-  tags:
-    - debug
 
 - name: create audits dir
   become: yes
@@ -148,7 +146,33 @@
       git config --global user.email {{git_email}}
   args:
     chdir: "{{repo_download_path}}"
-  when: inventory_hostname == '127.0.0.1'
+
+# GeoServer conf reload
+- name: Discard local changes to datadir
+  tags: [ never, config_update, debug ]
+  become: yes
+  become_user: "{{tomcat_user}}"
+  become_method: sudo
+  git:
+    repo: "{{repo_url}}"
+    accept_hostkey: yes
+    key_file: "{{dest_key}}/.ssh/id_rsa"
+    update: yes
+    force: yes
+    dest: "{{repo_download_path}}/"
+  when: "'geoserver' in group_names"
+
+
+- name: Reload GeoServer configuration
+  tags: [ never, config_update, reload ]
+  uri:
+    url: http://localhost:8080/geoserver/rest/reload/
+    user: "{{geoserver_admin_user}}"
+    password: "{{geoserver_admin_pass}}"
+    method: POST
+    force_basic_auth: yes
+    status_code: 200
+  when: "'geoserver' in group_names"
 
 #- name: Commit and push changes
 #  shell: |
