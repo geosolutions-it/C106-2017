@@ -225,14 +225,14 @@
     src: logrotate_geoserver.j2
     dest: "/etc/logrotate.d/geoserver"
 
-- name: Prune logs
+- name: Prune GeoServer logs
   cron:
     name: "prune logs"
     minute: "0"
     hour: "0"
     job: "/usr/bin/find {{catalina_base}}/logs -type f -mtime +{{logs_retention}} -delete"
 
-- name: Prune audits
+- name: Prune GeoServer audits
   cron:
     name: "prune audits"
     minute: "30"
