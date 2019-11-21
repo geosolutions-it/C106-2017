@@ -1,0 +1,13 @@
+{{catalina_base}}/logs/*log
+{{catalina_base}}/logs/*txt
+{{catalina_base}}/logs/*out
+{{audits_path}}/*log
+{{geoserver_log_location}}
+{
+    copytruncate
+    daily
+    rotate 7
+    compress
+    missingok
+    create 0644 tomcat tomcat
+}
