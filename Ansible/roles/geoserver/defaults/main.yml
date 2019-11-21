@@ -37,9 +37,7 @@ dest_key: "{{catalina_base}}/.ssh"
 
 geoserver_admin_user: "admin"
 geoserver_admin_pass: "geoserver"
-geoserver_version_number: 2.16.x
-geoserver_version: "geoserver-{{geoserver_version_number}}-latest-war"
-geoserver_url: "https://build.geoserver.org/geoserver/{{geoserver_version_number}}/{{geoserver_version}}.zip"
+geoserver_url: "https://demo.geo-solutions.it/share/C106/geoserver.war"
 geoserver_pg_user: geoserver
 geoserver_pg_pass: geoserver 
 geoserver_conext_xml: credentials/geoserver_conext_xml

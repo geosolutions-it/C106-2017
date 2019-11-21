@@ -92,27 +92,21 @@
     dest: "{{repo_download_path}}/"
 
 # Install GeoServer WAR
-- name: Check for downloaded geoserver WAR
-  stat:
-    path: "/tmp/{{geoserver_version}}.zip"
-  register: downloaded
-
 - name: Download GeoServer
   become: yes
   become_user: "{{tomcat_user}}"
   become_method: sudo
   get_url: 
     url: "{{geoserver_url}}"
-    dest: /tmp
+    dest: /tmp/geoserver.war.zip
     remote_src: yes
-  when: downloaded.stat.exists == False
 
 - name: Extract GeoServer WAR
   become: yes
   become_user: "{{tomcat_user}}"
   become_method: sudo
   unarchive: 
-    src: "/tmp/{{geoserver_version}}.zip"
+    src: "/tmp/geoserver.war.zip"
     dest: "{{catalina_base}}/webapps"
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
