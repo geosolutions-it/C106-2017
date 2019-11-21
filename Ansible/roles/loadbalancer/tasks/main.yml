@@ -26,7 +26,7 @@
     name: "prune HAProxy logs"
     minute: "0"
     hour: "0"
-    job: "/usr/bin/find /var/log/haproxy.log -type f -mtime +{{logs_retention}} -delete"
+    job: "/usr/bin/find /var/log/ -type f -mtime +{{logs_retention}} -delete"
 
 
 - name: Smoke testing loadbalancer
