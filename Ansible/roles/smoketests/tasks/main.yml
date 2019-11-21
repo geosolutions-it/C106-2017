@@ -4,8 +4,14 @@
     timeout: 50
     url: "{{geoserver1_url}}"
     return_content: yes
+<<<<<<< HEAD
   register: webpage
   failed_when: "'GeoServer instance' not in webpage.content"
+=======
+  register: this
+  failed_when: "'GeoServer instance' not in this.content"
+  delegate_to: 127.0.0.1
+>>>>>>> 4f3c1ef3e7926e945351dab9e14790a719fff3fb
 
 - name: Get geoserver 2 webpage
   uri:
@@ -14,6 +20,7 @@
     return_content: yes
   register: webpage
   failed_when: "'GeoServer instance' not in webpage.content"
+<<<<<<< HEAD
 
 - name: Get geoserver from the ansible machine
   uri:
@@ -22,3 +29,15 @@
     return_content: yes
   register: webpage
   failed_when: "'GeoServer instance' not in webpage.content"
+=======
+  delegate_to: 127.0.0.1
+
+- name: Get geoserver from the loadbalancer
+  uri:
+    timeout: 50
+    url: "{{loadbalancer_url}}"
+    return_content: yes
+  register: this
+  failed_when: "'GeoServer instance' not in this.content"
+  delegate_to: 127.0.0.1
+>>>>>>> 4f3c1ef3e7926e945351dab9e14790a719fff3fb
