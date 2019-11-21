@@ -28,4 +28,3 @@
     return_content: yes
   register: this
   failed_when: "'GeoServer instance' not in this.content"
-  delegate_to: 127.0.0.1
