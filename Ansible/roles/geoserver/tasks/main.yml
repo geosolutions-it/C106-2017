@@ -245,13 +245,20 @@
     status_code: 200
   when: "'geoserver' in group_names"
 
-#- name: Commit and push changes
-#  shell: |
-#    rm -f .git/index.lock;
-#    git add .;
-#    git commit -m "ansible commit";
-#    git push -u origin master;
-#  args:
-#    chdir: "{{repo_download_path}}"
-#  when: inventory_hostname == '127.0.0.1'
+- name: Get geoserver 1 webpage
+  tags: "test"
+  uri:
+    timeout: 50
+    url: "{{geoserver1_url}}"
+    return_content: yes
+  register: webpage
+  failed_when: "'GeoServer instance' not in webpage.content"
 
+- name: Get geoserver 2 webpage
+  uri:
+    timeout: 50
+    url: "{{geoserver2_url}}"
+    return_content: yes
+  register: webpage
+  failed_when: "'GeoServer instance' not in webpage.content"
+  

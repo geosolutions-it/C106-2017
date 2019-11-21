@@ -1,4 +1,0 @@
----
-geoserver1_url: "http://{{backend1}}:8080/geoserver/web/"
-geoserver2_url: "http://{{backend2}}:8080/geoserver/web/"
-ansible_machine_url: "http://{{ansible_machine}}:8080/geoserver/web/"
