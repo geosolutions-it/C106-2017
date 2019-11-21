@@ -246,7 +246,6 @@
   when: "'geoserver' in group_names"
 
 - name: Get geoserver 1 webpage
-  tags: "test"
   uri:
     timeout: 50
     url: "{{geoserver1_url}}"
@@ -261,4 +260,3 @@
     return_content: yes
   register: webpage
   failed_when: "'GeoServer instance' not in webpage.content"
-  

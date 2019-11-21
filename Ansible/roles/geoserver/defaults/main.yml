@@ -42,3 +42,7 @@ geoserver_url: "https://build.geoserver.org/geoserver/{{geoserver_version_number
 geoserver_pg_user: geoserver
 geoserver_pg_pass: geoserver 
 geoserver_conext_xml: credentials/geoserver_conext_xml
+
+# smoketests
+geoserver1_url: http://{{backend1}}:8080/geoserver/web/
+geoserver2_url: http://{{backend2}}:8080/geoserver/web/
