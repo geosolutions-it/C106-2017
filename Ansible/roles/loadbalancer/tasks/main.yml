@@ -20,3 +20,12 @@
   service:
     name: haproxy
     state: restarted
+
+- name: Smoke testing loadbalancer
+  uri:
+    timeout: 50
+    url: "{{loadbalancer_url}}"
+    return_content: yes
+  register: this
+  failed_when: "'GeoServer instance' not in this.content"
+  delegate_to: 127.0.0.1
