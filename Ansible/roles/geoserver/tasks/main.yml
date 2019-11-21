@@ -227,15 +227,15 @@
 
 - name: Prune logs
   cron:
-    name: "prune logs and audits"
+    name: "prune logs"
     minute: "0"
     hour: "0"
     job: "/usr/bin/find {{catalina_base}}/logs -type f -mtime +{{logs_retention}} -delete"
 
-- name: Prune auditsAudi
+- name: Prune audits
   cron:
-    name: "prune logs and audits"
-    minute: "0"
+    name: "prune audits"
+    minute: "30"
     hour: "0"
     job: "/usr/bin/find {{audits_path}} -type f -mtime +{{audits_retention}} -delete"
 
