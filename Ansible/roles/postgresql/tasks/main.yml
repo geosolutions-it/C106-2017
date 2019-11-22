@@ -8,6 +8,7 @@
       - unzip
       - cifs-utils
       - git
+      - python3-psycopg2
     state: present
 
 # PostgreSQL
