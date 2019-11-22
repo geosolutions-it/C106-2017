@@ -1,3 +1,7 @@
 ---
+#haproxy
 loadbalancer_url: "http://{{loadbalancer}}/geoserver/web/"
 logs_retention: 14
+
+# smoketests
+timeout_seconds: 180

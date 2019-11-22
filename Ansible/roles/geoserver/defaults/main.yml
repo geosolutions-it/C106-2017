@@ -25,7 +25,7 @@ geoserver_log_location: "{{catalina_base}}/logs/geoserver.log"
 
 java_opts: JAVA_OPTS="-Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:+UseParallelOldGC -DGEOSERVER_DATA_DIR={{datadir_path}} -DGEOWEBCACHE_CONFIG_DIR={{datadir_path}}/gwc -DGEOWEBCACHE_CACHE_DIR={{gwc_cache_dir}} -DGEOSERVER_LOG_LOCATION={{geoserver_log_location}} -DGEOSERVER_NODE_OPTS=id:geoserver -DALLOW_ENV_PARAMETRIZATION=true  -Xbootclasspath/a:{{catalina_base}}/webapps/geoserver/WEB-INF/lib/marlin-0.9.3.jar -Dsun.java2d.renderer=org.marlin.pisces.MarlinRenderingEngine -DGEOSERVER_AUDIT_PATH={{audits_path}} -DENABLE_JSONP=true -Dorg.geotools.localDateTimeHandling=true"
 
-# datadir repo
+# geoserver and gitlab
 git_username: Alessandro Parma
 git_email: alessa.parma@gmail.com
 repo_name: geoserver-datadir
@@ -48,3 +48,4 @@ audits_retention: 14
 # smoketests
 geoserver1_url: http://{{backend1}}:8080/geoserver/web/
 geoserver2_url: http://{{backend2}}:8080/geoserver/web/
+timeout_seconds: 180
