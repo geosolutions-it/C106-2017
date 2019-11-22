@@ -91,6 +91,15 @@ ansible-playbook loadBalancer.yml
 
  <strong>Note</strong>: if password is required for sudo privileges on the target machine, append the `--ask-become-pass` parameter to the command above
 
+#### Notable variables
+Vars you may want to change / override in `loadbalancer` role:
+`logs_retention` which governs how long the log files are retained on the machine
+
+#### Other customizations
+In the `templates` directory for the `loadbalancer` role you'll find template files used for:
+- `haproxy.cfg`: HAProxy main config file
+
+
 ### Run playbook for the webservers:
 
 ```bash
@@ -111,3 +120,30 @@ and launching the playbook with  ```--tags "tagname"```
 ```shell
 ansible-playbook playbook.yml --ask-become-pass --ask-vault-pass --tags "tagname"
 ```
+
+#### Notable variables
+Vars you may want to change / override in the geoserver role:
+`tomcat_allowed_origins`: allowed Origins for Tomcat
+`logs_retention`: which governs how long the log files are retained on the machine
+`audits_retention`: which governs how long the log files are retained on the machine
+`java_opts`: which governs JVM, Tomcat and GeoServer settings
+`git_username`, `git_email`, `repo_name`, `repo_url`: which determine what Gitlab repository to clone the GeoServer datadir from and what git user settings
+`geoserver_admin_user`, `geoserver_admin_pass`: should match geoserver credentials set in the provided datadir from gitlab
+`geoserver_pg_user`, `geoserver_pg_pass`: these credentials will be used to create a user in PSQL and create the `context.xml` file with JNDI connection pool to PSQL for GeoServer
+
+#### Other customizations
+In the `templates` directory for the GeoServer role you'll find template files used for:
+- Tomcat `context.xml`: JNDI connection pool settings
+- Tomcat `server.xml`: Tomcat listening ports and logging AccessLogValve settings 
+- Tomcat `web.xml`: CORS settings
+- Logrotate `geoserver`: config file to rotate GeoServer logs
+
+### Perform GeoServer config updates:
+```bash
+ansible-playbook webServer.yml --ask-vault-pass --tags config_update
+
+```
+
+This will trigger two tasks in the play to:
+- git pull the  datadir repo from GitLab (discarding any local changes) on the webserver machines
+- perform a GeoServer catalog reload via REST on the webserver machines
