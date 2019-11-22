@@ -171,6 +171,15 @@
     db: geoserver
     priv: "ALL"
 
+- name: Add PostGIS extension
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_ext:
+    name: postgis
+    db: geoserver
+    schema: public
+
 - name: Install context.xml
   become: yes
   template:
