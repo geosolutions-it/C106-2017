@@ -98,18 +98,7 @@
   become_method: sudo
   get_url: 
     url: "{{geoserver_url}}"
-    dest: /tmp/geoserver.war.zip
-    remote_src: yes
-
-- name: Extract GeoServer WAR
-  become: yes
-  become_user: "{{tomcat_user}}"
-  become_method: sudo
-  unarchive: 
-    src: "/tmp/geoserver.war.zip"
-    dest: "{{catalina_base}}/webapps"
-    owner: "{{tomcat_user}}"
-    group: "{{tomcat_group}}"
+    dest: "{{catalina_base}}/webapps/geoserver.war"
     remote_src: yes
 
 - name: Set JAVA_OPTS
@@ -177,7 +166,6 @@
   become_user: postgres
   become_method: sudo
   postgresql_user:
-    name: geoserver
     name: "{{geoserver_pg_user}}"
     password: "{{geoserver_pg_pass}}"
     db: geoserver
