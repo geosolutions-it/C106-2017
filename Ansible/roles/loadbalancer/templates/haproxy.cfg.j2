@@ -41,5 +41,6 @@ frontend http-in
 	default_backend servers
 
 backend servers
+    balance leastconn
     server server1 {{backend1}}:8080 maxconn 32
 	server server2 {{backend2}}:8080 maxconn 32
