@@ -258,7 +258,7 @@
 
 - name: Get geoserver 1 webpage
   uri:
-    timeout: {{timeout_seconds}}
+    timeout: "{{timeout_seconds}}"
     url: "{{geoserver1_url}}"
     return_content: yes
   register: webpage
@@ -266,7 +266,7 @@
 
 - name: Get geoserver 2 webpage
   uri:
-    timeout: {{timeout_seconds}}
+    timeout: "{{timeout_seconds}}"
     url: "{{geoserver2_url}}"
     return_content: yes
   register: webpage

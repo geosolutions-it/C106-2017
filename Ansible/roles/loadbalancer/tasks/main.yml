@@ -31,7 +31,7 @@
 
 - name: Smoke testing loadbalancer
   uri:
-    timeout: {{timeout_seconds}}
+    timeout: "{{timeout_seconds}}"
     url: "{{loadbalancer_url}}"
     return_content: yes
   register: this
